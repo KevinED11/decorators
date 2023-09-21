@@ -35,9 +35,29 @@ def say_hello2():
     print("hello2")
 
 
+def my_decorator_name(name: str) -> callable:
+    def my_custom_decorator(func: callable) -> callable:
+        def wrapper(*args, **kwargs):
+            print("before")
+            print("Hello, " + name)
+            result = func(*args, **kwargs)
+            print("after")
+            return result
+
+        return wrapper
+
+    return my_custom_decorator
+
+
+@my_decorator_name("John")
+def suma(a: int, b: int) -> int:
+    return a + b
+
+
 def main():
     say_hello()
     say_hello2()
+    print(suma(1, 2))
 
 
 if __name__ == '__main__':
