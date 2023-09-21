@@ -1,9 +1,13 @@
 
 def my_decorator(func: callable) -> callable:
+    """
+    A function that acts as a wrapper around another function.
+    """
     def wrapper(*args, **kwargs):
         print("before")
         func(*args, **kwargs)
         print("after")
+
     return wrapper
 
 
@@ -17,6 +21,10 @@ class MyDecorator:
         self.func = func
 
     def __call__(self, *args, **kwargs):
+        """
+        Call the function and print "before" before executing the
+        function and "after" after executing the function.
+        """
         print("before")
         self.func(*args, **kwargs)
         print("after")
