@@ -1,3 +1,6 @@
+from abc import ABC, abstractmethod
+
+
 def my_decorator(func: callable) -> callable:
     """
     A function that acts as a wrapper around another function.
@@ -71,7 +74,23 @@ def ask_for_password(func: callable) -> callable:
     return wrapper
 
 
-class ServerService:
+class IServerService(ABC):
+    @ask_for_password
+    @abstractmethod
+    def start(self) -> None:
+        pass
+
+    @ask_for_password
+    @abstractmethod
+    def stop(self) -> None:
+        pass
+
+    @abstractmethod
+    def status(self) -> str:
+        pass
+
+
+class SyncServerService(IServerService):
     def __init__(self):
         self.__running = False
 
@@ -100,9 +119,13 @@ def main():
     say_hello2()
     print(suma(1, 2))
 
-    server = ServerService()
-    server.stop()
-    print(server.status)
+    server_instance = SyncServerService()
+    try:
+        server_instance.start()
+        server_instance.stop()
+        print(server_instance.status)
+    except IncorrectPasswordException as err:
+        print(f"{type(err).__name__}:", err)
 
 
 if __name__ == "__main__":
