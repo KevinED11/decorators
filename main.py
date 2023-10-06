@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import os
 
 
 def my_decorator(func: callable) -> callable:
@@ -63,7 +64,8 @@ class IncorrectPasswordException(Exception):
 
 def ask_for_password(func: callable) -> callable:
     def wrapper(*args, **kwargs) -> None:
-        correct_password = "secret"
+        password_by_default = "secret"
+        correct_password = os.environ.get("PASSWORD", default=password_by_default)
         password = input("Enter password: ")
 
         if password != correct_password:
