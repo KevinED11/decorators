@@ -87,12 +87,20 @@ class IServerService(ABC):
     def stop(self) -> None:
         pass
 
+    @ask_for_password
+    @abstractmethod
+    def turn_off(self) -> None:
+        pass
+
     @abstractmethod
     def status(self) -> str:
         pass
 
 
 class SyncServerService(IServerService):
+    server_is_not_running_message = "Server is not running"
+    server_is_running_message = "Server is running"
+
     def __init__(self):
         self.__running = False
 
@@ -103,17 +111,28 @@ class SyncServerService(IServerService):
 
     @ask_for_password
     def stop(self) -> None:
-        if not self.__running:
-            print("Server is not running")
+        if not self.__is_server_running:
+            print(self.server_is_not_running_message)
             return
 
         print("Stopping server")
+        self.__running = False
+
+    @ask_for_password
+    def turn_off(self) -> None:
+        if not self.__is_server_running:
+            print(self.server_is_not_running_message)
+            return
         self.__running = False
 
     @property
     def status(self) -> str:
         print("Server status")
         return f"running: {str(self.__running)}"
+
+    @property
+    def __is_server_running(self) -> bool:
+        return self.__running
 
 
 def main():
